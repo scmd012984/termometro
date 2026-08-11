@@ -1,4 +1,4 @@
-import { buscarCiudad, obtenerTemperaturas } from "./api.js";
+import { buscarCiudad, obtenerTemperaturas,guardarBusqueda } from "./api.js";
 import { pintarGrafico, mostrarCargando, mostrarError, limpiarEstado } from "./render.js";
 
 const $input = document.getElementById("input-ciudad");
@@ -26,6 +26,7 @@ async function manejarBusqueda() {
 
     limpiarEstado();
     pintarGrafico(ciudad, horas);
+    await guardarBusqueda(ciudad.nombre, horas[0].temperatura);
   } catch (error) {
     mostrarError(error.message);
     console.error(error);
