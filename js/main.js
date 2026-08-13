@@ -1,3 +1,4 @@
+import { guardarCiudad, cargarFavoritas } from "./db.js";
 import { buscarCiudad, obtenerTemperaturas,guardarBusqueda } from "./api.js";
 import { pintarGrafico, mostrarCargando, mostrarError, limpiarEstado } from "./render.js";
 
@@ -44,3 +45,10 @@ $input.addEventListener("keydown", (evento) => {
 
 $input.value = "Málaga";
 manejarBusqueda();
+// Al arrancar la app, pintar las favoritas guardadas:
+async function mostrarFavoritas() {
+  const favoritas = await cargarFavoritas();
+  console.log("Mis ciudades:", favoritas);
+  // aquí las pintas en el DOM, como haces con las barras
+}
+mostrarFavoritas();
