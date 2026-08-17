@@ -14,19 +14,10 @@ function mostrarResultado() {
   $resultado.removeAttribute("hidden");
 }
 
-function mostrarBotonGuardar() {
-  let btn = document.getElementById("btn-guardar");
-  if (!btn) {
-    btn = document.createElement("button");
-    btn.id = "btn-guardar";
-    btn.type = "button";
-    btn.className = "btn-guardar";
-    btn.textContent = "Guardar esta ciudad";
-    $titulo.insertAdjacentElement("afterend", btn);
-  }
-  btn.removeAttribute("hidden");
+export function mostrarBotonGuardar() {
+  const btn = document.getElementById('btn-guardar');
+  if (btn) btn.style.display = 'block';
 }
-
 export function mostrarCargando(ciudad = "…") {
   $estado.textContent = `Buscando el tiempo en ${ciudad}…`;
   $estado.classList.remove("estado--error");
