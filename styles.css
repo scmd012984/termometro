@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg: #0f1117;
+  --panel: #181b24;
+  --texto: #e8eaf0;
+  --texto-suave: #8b91a3;
+  --acento: #4f8cff;
+  --radio: 10px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  background: linear-gradient(180deg, #1a2744 0%, #2c3e5e 25%, #4a6a8a 50%, #6b8fa8 70%, #8ab4c9 85%, #a8d1e3 100%);
+  color: var(--texto);
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: -80px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 40%, #ffe680 0%, #ffd633 30%, #ffb300 60%, transparent 72%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 100px;
+  right: 180px;
+  width: 200px;
+  height: 70px;
+  border-radius: 70px;
+  background: rgba(255, 255, 255, 0.15);
+  filter: blur(2px);
+  pointer-events: none;
+  z-index: 0;
+  box-shadow:
+    140px 60px 0 -10px rgba(255, 255, 255, 0.12),
+    -200px 90px 0 0 rgba(255, 255, 255, 0.08),
+    300px 40px 0 -5px rgba(255, 255, 255, 0.1),
+    -100px 140px 0 -8px rgba(255, 255, 255, 0.06);
+}
+
+.app {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.app__header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.app__subtitle {
+  margin: 0 0 1.5rem;
+  color: var(--texto-suave);
+  font-weight: 400;
+}
+
+/* ---- Buscador ---- */
+.search { display: flex; gap: 0.5rem; margin-bottom: 1.5rem; }
+
+.search__input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 1px solid #2a2f3d;
+  border-radius: var(--radio);
+  background: var(--panel);
+  color: var(--texto);
+}
+
+.search__input:focus {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+.search__button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 0;
+  border-radius: var(--radio);
+  background: var(--acento);
+  color: #fff;
+  cursor: pointer;
+}
+
+.search__button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ---- Estado ---- */
+.estado { min-height: 1.5rem; margin-bottom: 1rem; color: var(--texto-suave); }
+.estado--error { color: #ff6b6b; }
+
+/* ---- Gráfico ---- */
+.resultado { margin-bottom: 1rem; }
+
+.resultado__titulo { font-size: 1.25rem; margin: 0 0 1rem; }
+
+.grafico {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 320px;
+  padding: 1rem;
+  background: rgba(24, 27, 36, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radio);
+  overflow-x: auto;
+}
+
+.barra {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  min-width: 26px;
+  height: 100%;
+}
+
+.barra__valor { font-size: 0.65rem; color: var(--texto-suave); }
+
+.barra__relleno {
+  width: 100%;
+  height: var(--altura);
+  background: var(--color);
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease;
+}
+
+.barra__hora { font-size: 0.65rem; color: var(--texto-suave); }
+
+/* ---- Guardar y favoritas ---- */
+.btn-guardar {
+  display: inline-block;
+  margin: 1rem 0 0;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  border: 0;
+  border-radius: var(--radio);
+  background: var(--acento);
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-guardar:hover {
+  filter: brightness(1.08);
+}
+
+.favoritas {
+  margin-top: 2rem;
+}
+
+.favoritas h2 {
+  font-size: 1.25rem;
+  margin: 0 0 0.75rem;
+}
+
+#lista-favoritas {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.favoritas__item {
+  padding: 0.75rem 1rem;
+  background: rgba(24, 27, 36, 0.85);
+  backdrop-filter: blur(8px);
+  border-radius: var(--radio);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  body { padding: 1.25rem 0.75rem; }
+
+  .app__header h1 { font-size: 1.4rem; }
+
+  .search { flex-direction: column; }
+
+  .grafico { height: 250px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
