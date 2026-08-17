@@ -1,9 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
-import { SUPABASE_URL, SUPABASE_KEY } from "./config.js";
+const { createClient } = window.supabase;
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+const supabase = createClient(
+  "https://riszrqkyojucwbbqwkas.supabase.co",
+  "sb_publishable_fRGsufn3a9QTy2th-o2TgA_er1Ulsdx"
+);
 
-// GUARDAR una ciudad favorita (Create)
 export async function guardarCiudad(nombre, lat, lon) {
   const { error } = await supabase
     .from("ciudades_favoritas")
@@ -11,7 +12,6 @@ export async function guardarCiudad(nombre, lat, lon) {
   if (error) throw new Error(error.message);
 }
 
-// LEER todas las favoritas (Read)
 export async function cargarFavoritas() {
   const { data, error } = await supabase
     .from("ciudades_favoritas")

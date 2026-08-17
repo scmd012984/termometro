@@ -1,11 +1,10 @@
 import { buscarCiudad, obtenerTemperaturas } from "./api.js";
-import { pintarGrafico, mostrarCargando, mostrarError, limpiarEstado } from "./render.js";
+import { pintarGrafico, pintarFavoritas, mostrarCargando, mostrarError, limpiarEstado } from "./render.js";
 import { guardarCiudad, cargarFavoritas } from "./db.js";
 
+const $resultado = document.getElementById("resultado");
 const $input = document.getElementById("input-ciudad");
 const $boton = document.getElementById("btn-buscar");
-const $botonGuardar = document.getElementById("btn-guardar");
-const $listaFavoritas = document.getElementById("lista-favoritas");
 
 let cargando = false;
 
@@ -19,21 +18,17 @@ async function manejarBusqueda() {
   if (!consulta || cargando) return;
 
   cargando = true;
-  mostrarCargando();
+  mostrarCargando(consulta);
 
   try {
     const ciudad = await buscarCiudad(consulta);
-    if (!ciudad) {
-      mostrarError("No se encontró la ciudad");
-      return;
-    }
 
-    const temps = await obtenerTemperaturas(ciudad.latitude, ciudad.longitude);
+    const temps = await obtenerTemperaturas(ciudad.lat, ciudad.lon);
     ciudadActual = ciudad;
     pintarGrafico(ciudad, temps);
     limpiarEstado();
   } catch (error) {
-    mostrarError("Error al obtener los datos");
+    mostrarError(error.message || "Error al obtener los datos");
   } finally {
     cargando = false;
   }
@@ -45,13 +40,25 @@ $input.addEventListener("keypress", (e) => {
   if (e.key === "Enter") manejarBusqueda();
 });
 
-if ($botonGuardar) {
-  $botonGuardar.addEventListener("click", async () => {
-    if (!ciudadActual) return;
-    await guardarCiudad(ciudadActual.name);
-    await cargarFavoritas();
-  });
+async function refrescarFavoritas() {
+  try {
+    const favoritas = await cargarFavoritas();
+    pintarFavoritas(favoritas);
+  } catch {
+    // Las favoritas son opcionales; no bloquean la búsqueda ni el botón guardar
+  }
 }
 
-// Cargar las favoritas al iniciar la página
-cargarFavoritas();
+$resultado.addEventListener("click", async (e) => {
+  if (e.target.id !== "btn-guardar") return;
+  if (!ciudadActual) return;
+
+  try {
+    await guardarCiudad(ciudadActual.nombre, ciudadActual.lat, ciudadActual.lon);
+    await refrescarFavoritas();
+  } catch (error) {
+    mostrarError(error.message || "No se pudo guardar la ciudad");
+  }
+});
+
+refrescarFavoritas();

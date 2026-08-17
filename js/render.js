@@ -4,17 +4,39 @@ const $estado = document.getElementById("estado");
 const $resultado = document.getElementById("resultado");
 const $titulo = document.getElementById("titulo-ciudad");
 const $grafico = document.getElementById("grafico");
+const $listaFavoritas = document.getElementById("lista-favoritas");
 
-export function mostrarCargando(ciudad) {
+function ocultarResultado() {
+  $resultado.setAttribute("hidden", "");
+}
+
+function mostrarResultado() {
+  $resultado.removeAttribute("hidden");
+}
+
+function mostrarBotonGuardar() {
+  let btn = document.getElementById("btn-guardar");
+  if (!btn) {
+    btn = document.createElement("button");
+    btn.id = "btn-guardar";
+    btn.type = "button";
+    btn.className = "btn-guardar";
+    btn.textContent = "Guardar esta ciudad";
+    $titulo.insertAdjacentElement("afterend", btn);
+  }
+  btn.removeAttribute("hidden");
+}
+
+export function mostrarCargando(ciudad = "…") {
   $estado.textContent = `Buscando el tiempo en ${ciudad}…`;
   $estado.classList.remove("estado--error");
-  $resultado.hidden = true;
+  ocultarResultado();
 }
 
 export function mostrarError(mensaje) {
   $estado.textContent = mensaje;
   $estado.classList.add("estado--error");
-  $resultado.hidden = true;
+  ocultarResultado();
 }
 
 export function limpiarEstado() {
@@ -54,5 +76,25 @@ export function pintarGrafico(ciudad, datosHorarios) {
   });
 
   $grafico.append(fragmento);
-  $resultado.hidden = false;
+  mostrarBotonGuardar();
+  mostrarResultado();
+}
+
+export function pintarFavoritas(favoritas) {
+  if (!$listaFavoritas) return;
+
+  $listaFavoritas.innerHTML = "";
+
+  if (!favoritas?.length) return;
+
+  const fragmento = document.createDocumentFragment();
+
+  favoritas.forEach((favorita) => {
+    const item = document.createElement("li");
+    item.className = "favoritas__item";
+    item.textContent = favorita.nombre;
+    fragmento.append(item);
+  });
+
+  $listaFavoritas.append(fragmento);
 }
