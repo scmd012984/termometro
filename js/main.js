@@ -49,7 +49,7 @@ async function refrescarFavoritas() {
   }
 }
 
-$resultado.addEventListener("click", async (e) => {
+document.addEventListener("click", async (e) => {
   if (e.target.id !== "btn-guardar") return;
   if (!ciudadActual) return;
 
