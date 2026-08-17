@@ -1,9 +1,4 @@
-const { createClient } = window.supabase;
-
-const supabase = createClient(
-  "https://riszrqkyojucwbbqwkas.supabase.co",
-  "sb_publishable_fRGsufn3a9QTy2th-o2TgA_er1Ulsdx"
-);
+import { supabase } from "./supabase.js";
 
 export async function guardarCiudad(nombre, lat, lon) {
   const { error } = await supabase

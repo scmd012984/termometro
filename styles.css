@@ -154,7 +154,7 @@ body::after {
 /* ---- Guardar y favoritas ---- */
 .btn-guardar {
   display: inline-block;
-  margin: 0 0 1rem;
+  margin: 1rem 0 0;
   padding: 0.75rem 1.5rem;
   font-size: 1rem;
   font-weight: 600;
@@ -168,10 +168,6 @@ body::after {
 
 .btn-guardar:hover {
   filter: brightness(1.08);
-}
-
-#resultado .btn-guardar {
-  display: inline-block;
 }
 
 .favoritas {
@@ -215,17 +211,4 @@ body::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-}
-#btn-guardar {
-  display: block !important;
-  visibility: visible !important;
-  margin: 1.5rem auto !important;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border: 0;
-  border-radius: var(--radio);
-  background: var(--acento);
-  color: #fff;
-  cursor: pointer;
 }

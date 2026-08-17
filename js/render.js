@@ -16,7 +16,9 @@ function mostrarResultado() {
 
 export function mostrarBotonGuardar() {
   const btn = document.getElementById('btn-guardar');
-  if (btn) btn.style.display = 'block';
+  if (!btn) return;
+  btn.removeAttribute('hidden');
+  btn.style.removeProperty('display');
 }
 export function mostrarCargando(ciudad = "…") {
   $estado.textContent = `Buscando el tiempo en ${ciudad}…`;
@@ -33,6 +35,11 @@ export function mostrarError(mensaje) {
 export function limpiarEstado() {
   $estado.textContent = "";
   $estado.classList.remove("estado--error");
+}
+
+export function mostrarNotificacion(mensaje, esError = false) {
+  $estado.textContent = mensaje;
+  $estado.classList.toggle("estado--error", esError);
 }
 
 export function pintarGrafico(ciudad, datosHorarios) {

@@ -1,12 +1,13 @@
 import { buscarCiudad, obtenerTemperaturas } from "./api.js";
-import { pintarGrafico, pintarFavoritas, mostrarCargando, mostrarError, limpiarEstado } from "./render.js";
+import { pintarGrafico, pintarFavoritas, mostrarCargando, mostrarError, limpiarEstado, mostrarNotificacion } from "./render.js";
 import { guardarCiudad, cargarFavoritas } from "./db.js";
 
-const $resultado = document.getElementById("resultado");
 const $input = document.getElementById("input-ciudad");
 const $boton = document.getElementById("btn-buscar");
+const $btnGuardar = document.getElementById("btn-guardar");
 
 let cargando = false;
+let guardando = false;
 
 // La ciudad que hay AHORA en pantalla. Dentro de manejarBusqueda, la
 // variable ⁠ ciudad ⁠ es local: nace y muere dentro de la función. Cuando
@@ -24,6 +25,11 @@ async function manejarBusqueda() {
     const ciudad = await buscarCiudad(consulta);
 
     const temps = await obtenerTemperaturas(ciudad.lat, ciudad.lon);
+
+    if (!temps || temps.length === 0) {
+      throw new Error("No hay datos de temperatura para esa ciudad");
+    }
+
     ciudadActual = ciudad;
     pintarGrafico(ciudad, temps);
     limpiarEstado();
@@ -49,15 +55,21 @@ async function refrescarFavoritas() {
   }
 }
 
-document.addEventListener("click", async (e) => {
-  if (e.target.id !== "btn-guardar") return;
-  if (!ciudadActual) return;
+$btnGuardar.addEventListener("click", async () => {
+  if (!ciudadActual || guardando) return;
+
+  guardando = true;
+  $btnGuardar.disabled = true;
 
   try {
     await guardarCiudad(ciudadActual.nombre, ciudadActual.lat, ciudadActual.lon);
+    mostrarNotificacion("Ciudad guardada en tus favoritas");
     await refrescarFavoritas();
   } catch (error) {
-    mostrarError(error.message || "No se pudo guardar la ciudad");
+    mostrarNotificacion(error.message || "No se pudo guardar la ciudad", true);
+  } finally {
+    guardando = false;
+    $btnGuardar.disabled = false;
   }
 });
 

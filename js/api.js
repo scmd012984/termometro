@@ -1,24 +1,19 @@
-const { createClient } = window.supabase;
+import { supabase } from "./supabase.js";
 
-const supabase = createClient(
-  'https://riszrqkyojucwbbqwkas.supabase.co',
-  'sb_publishable_fRGsufn3a9QTy2th-o2TgA_er1Ulsdx'
-);
-
-const URL_GEO = 'https://geocoding-api.open-meteo.com/v1/search';
-const URL_TIEMPO = 'https://api.open-meteo.com/v1/forecast';
+const URL_GEO = "https://geocoding-api.open-meteo.com/v1/search";
+const URL_TIEMPO = "https://api.open-meteo.com/v1/forecast";
 
 export async function buscarCiudad(nombre) {
   const url =
     URL_GEO +
-    '?name=' + encodeURIComponent(nombre) +
-    '&count=1&language=es&format=json';
+    "?name=" + encodeURIComponent(nombre) +
+    "&count=1&language=es&format=json";
 
   const respuesta = await fetch(url);
 
   if (!respuesta.ok) {
     throw new Error(
-      'El servicio de búsqueda falló (' + respuesta.status + ')'
+      "El servicio de búsqueda falló (" + respuesta.status + ")"
     );
   }
 
@@ -43,23 +38,23 @@ export async function buscarCiudad(nombre) {
 export async function obtenerTemperaturas(lat, lon) {
   const url =
     URL_TIEMPO +
-    '?latitude=' + lat +
-    '&longitude=' + lon +
-    '&hourly=temperature_2m' +
-    '&forecast_days=1' +
-    '&timezone=auto';
+    "?latitude=" + lat +
+    "&longitude=" + lon +
+    "&hourly=temperature_2m" +
+    "&forecast_days=1" +
+    "&timezone=auto";
 
   const respuesta = await fetch(url);
 
   if (!respuesta.ok) {
     throw new Error(
-      'El servicio meteorológico falló (' + respuesta.status + ')'
+      "El servicio meteorológico falló (" + respuesta.status + ")"
     );
   }
 
   const datos = await respuesta.json();
 
-  return datos.hourly.time.map(function(hora, i) {
+  return datos.hourly.time.map(function (hora, i) {
     return {
       hora: hora,
       temperatura: datos.hourly.temperature_2m[i]
@@ -69,10 +64,7 @@ export async function obtenerTemperaturas(lat, lon) {
 
 export async function guardarBusqueda(ciudad, temperatura) {
   const { error } = await supabase
-    .from('busquedas')
-    .insert([{ ciudad: ciudad, temperatura: temperatura }]);
-  if (error) {
-    // Silenciar error, pero podría mostrarse si se quiere
-    // console.error('Error al guardar la búsqueda:', error);
-  }
+    .from("busquedas")
+    .insert([{ ciudad, temperatura }]);
+  if (error) throw new Error(error.message);
 }
